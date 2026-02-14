@@ -25,13 +25,13 @@ with Dirichlet boundary conditions and finite-difference spatial discretization.
 
 ---
 
-### Design Principles
+### Code design
 
 The code is divided into logically separated functions and modules, so if the structure is kept unchanged, in notebooks the experiments can be remade if the user give the correct input for neccessary components.
 
 ---
 
-## AI Usage Statement
+## AI Usage
 
 Artificial Intelligence tools were used as supportive development aids in the following way:
 
