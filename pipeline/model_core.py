@@ -3,7 +3,7 @@ import numpy as np
 # -----------------------------
 # Jednorodne stany stacjonarne (część reakcyjna)
 # -----------------------------
-def v_stac(a: float, m: float) -> float:
+def v_stac(a: float, m: float, mode: int = 1, add_delta = True) -> float:
     """
     Oblicza dodatni jednorodny punkt stacjonarny v* układu reakcyjnego
     wynikający z rozwiązania równania kwadratowego.
@@ -14,18 +14,27 @@ def v_stac(a: float, m: float) -> float:
         Parametr sterujący (np. dopływ/zasób).
     m : float
         Parametr liniowej utraty.
+    mode : float
+        1 podmienia delte na 0, 2 pozwala na ujemną delte.
+    add_delta : bool
+        Czy dodajemy delte? False zwraca odejmowanie
 
     Zwraca
     -------
     float
-        Dodatnie rozwiązanie v*, jeśli istnieje.
-        W przypadku braku dodatnich rozwiązań (delta <= 0)
-        zwraca 0.
+        Rozwiązanie v*, jeśli istnieje.
     """
     delta = a * a - 4 * m * m
-    if delta <= 0:
+    if delta < 0 and mode == 1:
         return 0
-    return (a + np.sqrt(delta)) / (2 * m)
+    if delta < 0 and mode == 2:
+        raise ValueError("Ujemna delta.")
+
+    if add_delta == True:
+        return (a + np.sqrt(delta)) / (2 * m)
+    else:
+        return (a - np.sqrt(delta)) / (2 * m)
+
 
 def u_stac(v: float, m: float) -> float:
     """
@@ -163,3 +172,20 @@ def dirichlet_boundary_mask(X: np.ndarray, Y: np.ndarray, Lx: float, Ly: float) 
     Yf = Y.flatten()
     boundary = (Xf == 0.0) | (Xf == Lx) | (Yf == 0.0) | (Yf == Ly)
     return boundary
+
+# -----------------------------
+# Jacobian
+# -----------------------------
+def jacobian(u_stac: float, v_stac: float) -> np.ndarray:
+    return np.array([[-1 - v_stac**2, -2 * u_stac * v_stac],
+                     [v_stac**2, 2 * u_stac * v_stac - m]])
+
+
+# -----------------------------
+# Czy punkt jest stabilny?
+# -----------------------------
+def is_stable(J: np.ndarray) -> bool:
+    trJ = np.trace(J)
+    detJ = np.linalg.det(J)
+    return (trJ < 0 and detJ > 0)
+

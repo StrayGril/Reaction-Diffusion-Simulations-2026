@@ -1,6 +1,10 @@
 import numpy as np
 from scipy.linalg import lu_factor, lu_solve
-from pipeline.model_core import (v_stac, u_stac, laplacian2D, make_grid, dirichlet_boundary_mask)
+from pipeline.model_core import (
+    v_stac, u_stac,
+    laplacian2D,
+    make_grid,
+    dirichlet_boundary_mask)
 
 # ---------------------------------------
 # Niejawna dyfuzja
