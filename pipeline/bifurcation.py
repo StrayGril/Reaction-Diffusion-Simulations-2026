@@ -24,7 +24,6 @@ def precompute_diffusion(Nx: int, Ny: int, h: float, ht: float, d1: float, d2: f
             f_u, f_v – część reakcyjna.
 
     Parametry
-    ----------
     Nx, Ny : int
         Liczba wartości dla x i y.
     h : float
@@ -37,7 +36,6 @@ def precompute_diffusion(Nx: int, Ny: int, h: float, ht: float, d1: float, d2: f
         Współczynnik dyfuzji drugiej zmiennej.
 
     Zwraca
-    -------
         (lu_Au, lu_Av), gdzie każdy element reprezentuje rozkład macierzy:
             Au = I - ht * d1 * L,
             Av = I - ht * d2 * L.
@@ -62,7 +60,6 @@ def reaction(u: np.ndarray, v: np.ndarray, a: float, m: float):
         dv/dt = u v² - m v
 
     Parametry
-    ----------
     u, v : np.ndarray
         Aktualne wartości zmiennych w chwili t_n.
     a : float
@@ -71,7 +68,6 @@ def reaction(u: np.ndarray, v: np.ndarray, a: float, m: float):
         Parametr śmiertelności.
 
     Zwraca
-    -------
         (du, dv) — wartości pochodnych czasowych części reakcyjnej.
     """
     du = a - u - u * (v * v)
@@ -97,10 +93,8 @@ def step_reaction_diffusion(
         dyfuzja niejawnie (rozwiązanie układu liniowego).
 
     Schemat numeryczny ma postać:
-
         (I - ht d1 L) u^{n+1} = u^n + ht f_u(u^n, v^n)
         (I - ht d2 L) v^{n+1} = v^n + ht f_v(u^n, v^n)
-
     gdzie:
         L  – dyskretny operator Laplace’a,
         ht – krok czasowy,
@@ -108,7 +102,6 @@ def step_reaction_diffusion(
         f_u, f_v – część reakcyjna.
 
     Parametry
-    ----------
     u, v : np.ndarray
         Wartości w chwili t^n.
     a, m : float
@@ -117,15 +110,13 @@ def step_reaction_diffusion(
         Krok czasowy.
     lu_Au, lu_Av :
         Rozkłady LU macierzy (I - ht d L).
-    brzeg : np.ndarray | None
+    brzeg : np.ndarray
         Maska warunków brzegowych Dirichleta.
     clip_nonnegative : bool
         Czy wymuszać nieujemność rozwiązania.
 
     Zwraca
-    -------
-    tuple
-        (u_new, v_new) — wartości w chwili t^{n+1}.
+        (u_new, v_new) — wartości w chwili t_{n+1}.
     """
     # część reakcyjna
     du, dv = reaction(u, v, a, m)
@@ -167,11 +158,10 @@ def simulate_to_steady(
     eps: float = 1e-8,
 ):
     """
-    Iteruje schemat czasowy aż do osiągnięcia stanu stacjonarnego, gdzie kryterium to:
+    Iteruje schemat czasowy aż do osiągnięcia stanu stacjonarnego, gdzie stosowane kryterium to:
         || v^{n+1} - v^n || < eps
 
     Parametry
-    ----------
     u0, v0 : np.ndarray
         Warunki początkowe.
     a, m : float
@@ -180,17 +170,14 @@ def simulate_to_steady(
         Krok czasowy.
     lu_Au, lu_Av :
         Rozkłady LU macierzy dyfuzyjnych.
-    brzeg : np.ndarray | None
+    brzeg : np.ndarray
         Maska warunków Dirichleta.
     krok_max : int
         Maksymalna liczba iteracji.
     eps : float
         Tolerancja zbieżności.
-    norm_mask : np.ndarray | None
-        Maska używana do obliczania normy.
 
     Zwraca
-    -------
         (u, v, i) — rozwiązanie stacjonarne oraz liczba wykonanych iteracji.
     """
     u = u0.copy()
@@ -258,7 +245,6 @@ def continuation_sweep(
         Czy zapisywać pełne stany (u, v) dla każdej wartości a.
 
     Zwraca
-    -------
         (avg, max, states)
     """
     u = u_init.copy()
@@ -300,15 +286,12 @@ def estimate_tipping_point(a_values_desc: np.ndarray, max_series: np.ndarray) ->
            pomiędzy dwiema sąsiednimi wartościami parametru.
 
     Parametry
-    ----------
     a_values_desc : np.ndarray
         Malejące wartości parametru a.
     max_series : np.ndarray
         Maksimum biomasy dla kolejnych wartości a.
 
     Zwraca
-    -------
-    tuple
         (tp, idx), gdzie:
             tp  – przybliżony punkt krytyczny,
             idx – indeks odpowiadający największemu skokowi.
@@ -348,7 +331,6 @@ def run_bifurcation(
            (przejście „w górę” z okolic punktu krytycznego).
 
     Parametry
-    ----------
     m : float
         Parametr śmiertelności biomasy.
     d1, d2 : float
@@ -370,7 +352,6 @@ def run_bifurcation(
             a_max = amax_factor * m.
 
     Zwraca
-    -------
         - serie parametrów (a_down, a_up),
         - odpowiadające średnie i maksima biomasy,
         - przybliżony punkt krytyczny tp,
@@ -463,7 +444,6 @@ def plot_bifurcation(result: dict, title: str | None = None, show: bool = True, 
         - przybliżony punkt krytyczny (tipping point).
 
     Parametry
-    ----------
     result : dict
         parametry zwrócone przez funkcję run_bifurcation.
     title : str | None

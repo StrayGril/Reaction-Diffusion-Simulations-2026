@@ -9,7 +9,6 @@ def v_stac(a: float, m: float, mode: int = 1, add_delta = True) -> float:
     wynikający z rozwiązania równania kwadratowego.
 
     Parametry
-    ----------
     a : float
         Parametr sterujący (np. dopływ/zasób).
     m : float
@@ -20,7 +19,6 @@ def v_stac(a: float, m: float, mode: int = 1, add_delta = True) -> float:
         Czy dodajemy delte? False zwraca odejmowanie
 
     Zwraca
-    -------
     float
         Rozwiązanie v*, jeśli istnieje.
     """
@@ -39,17 +37,15 @@ def v_stac(a: float, m: float, mode: int = 1, add_delta = True) -> float:
 def u_stac(v: float, m: float) -> float:
     """
     Oblicza odpowiadający punkt stacjonarny u* dla zadanego v*,
-    korzystając z relacji algebraicznej między zmiennymi.
+    korzystając z relacji między zmiennymi.
 
     Parametry
-    ----------
     v : float
         Wartość stacjonarna v*.
     m : float
         Parametr modelu.
 
     Zwraca
-    -------
     float
         Wartość u*. Jeśli v <= 0, zwraca 0.
     """
@@ -66,12 +62,10 @@ def D2(N: int) -> np.ndarray:
     przy użyciu standardowego schematu trójdiagonalnego.
 
     Parametry
-    ----------
     N : int
         Wymiar macierzy.
 
     Zwraca
-    -------
     np.ndarray
         Macierz NxN aproksymująca operator d²/dx²
         bez narzuconych warunków brzegowych.
@@ -88,7 +82,6 @@ def laplacian2D(Nx: int, Ny: int, h: float) -> np.ndarray:
     Kroneckera macierzy jednowymiarowych.
 
     Parametry
-    ----------
     Nx : int
         Liczba kolumn macierzy dla wartości x.
     Ny : int
@@ -97,7 +90,6 @@ def laplacian2D(Nx: int, Ny: int, h: float) -> np.ndarray:
         Krok siatki (zakładamy hx = hy).
 
     Zwraca
-    -------
     np.ndarray
         Macierz (Nx*Ny) x (Nx*Ny) będąca
         dyskretnym operatorem Laplace’a.
@@ -117,7 +109,6 @@ def make_grid(Lx: float, Ly: float, Nx: int, Ny: int):
     [0, Lx] x [0, Ly] wraz z krokiem przestrzennym.
 
     Parametry
-    ----------
     Lx : float
         Długość domeny w kierunku x.
     Ly : float
@@ -128,14 +119,12 @@ def make_grid(Lx: float, Ly: float, Nx: int, Ny: int):
         Liczba wartości dla y.
 
     Zwraca
-    -------
         (x, y, X, Y, h), gdzie:
         x, y  – wektory współrzędnych,
         X, Y  – macierze siatki (meshgrid),
         h     – krok przestrzenny (hx = hy).
 
     Wyjątki
-    -------
     ValueError
         Gdy kroki w kierunku x i y nie są równe.
     """
@@ -156,14 +145,12 @@ def dirichlet_boundary_mask(X: np.ndarray, Y: np.ndarray, Lx: float, Ly: float) 
     Dirichleta na prostokątnej domenie.
 
     Parametry
-    ----------
     X, Y : np.ndarray
         Macierze współrzędnych siatki.
     Lx, Ly : float
         Wymiary domeny.
 
     Zwraca
-    -------
     np.ndarray
         Spłaszczona maska typu bool wskazująca punkty
         należące do brzegu obszaru.
@@ -176,10 +163,9 @@ def dirichlet_boundary_mask(X: np.ndarray, Y: np.ndarray, Lx: float, Ly: float) 
 # -----------------------------
 # Jacobian
 # -----------------------------
-def jacobian(u_stac: float, v_stac: float) -> np.ndarray:
+def jacobian(u_stac: float, v_stac: float, m: float) -> np.ndarray:
     return np.array([[-1 - v_stac**2, -2 * u_stac * v_stac],
                      [v_stac**2, 2 * u_stac * v_stac - m]])
-
 
 # -----------------------------
 # Czy punkt jest stabilny?
